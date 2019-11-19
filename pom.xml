@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.apon</groupId>
+    <artifactId>jooq-demo</artifactId>
+    <version>1.0-SNAPSHOT</version>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <jooq.version>3.12.3</jooq.version>
+
+        <!-- Property for generating classes with jOOQ -->
+        <url.database>jdbc:h2:file:./JooqDemo-db</url.database>
+    </properties>
+
+    <build>
+        <plugins>
+            <!-- Use java 12. -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>12</source>
+                    <target>12</target>
+                </configuration>
+            </plugin>
+
+            <!-- Plugin for generating jOOQ classes. -->
+            <plugin>
+                <groupId>org.jooq</groupId>
+                <artifactId>jooq-codegen-maven</artifactId>
+                <version>${jooq.version}</version>
+
+                <executions>
+                    <execution>
+                        <id>jooq-codegen</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+
+                <configuration>
+                    <jdbc>
+                        <driver>org.h2.Driver</driver>
+                        <url>${url.database}</url>
+                        <!-- <user></user>
+                        <password></password> -->
+                    </jdbc>
+                    <generator>
+                        <database>
+                            <name>org.jooq.meta.h2.H2Database</name>
+                            <includes>.*</includes>
+                            <!-- <excludes></excludes> -->
+                            <inputSchema>PUBLIC</inputSchema>
+                        </database>
+                        <target>
+                            <packageName>com.apon.jooq.generated</packageName>
+                            <directory>src/main/java</directory>
+                        </target>
+
+                        <generate>
+                            <pojos>true</pojos>
+                            <daos>true</daos>
+                            <interfaces>false</interfaces>
+                        </generate>
+                    </generator>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+
+    <dependencies>
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jooq</artifactId>
+            <version>${jooq.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jooq-meta</artifactId>
+            <version>${jooq.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jooq</groupId>
+            <artifactId>jooq-codegen</artifactId>
+            <version>${jooq.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <version>1.4.199</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+            <version>2.12.1</version>
+        </dependency>
+
+    </dependencies>
+
+</project>
